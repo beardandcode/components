@@ -1,4 +1,4 @@
-(defproject com.beardandcode/components "0.1.0"
+(defproject com.beardandcode/components "0.1.1"
   :description "A set of components for building software for use with com.stuartsierra/component"
   :url "http://bearandcode.com"
   :license {:name "MIT"
