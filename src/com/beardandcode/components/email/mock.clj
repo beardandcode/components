@@ -6,7 +6,7 @@
   (clear-emails [_]))
 
 (defrecord MockEmail [emails]
-  IEmail
+  email/IEmail
   (send-email [_ to subject message]
     (swap! emails conj {:to to :subject subject :message message})
     {})
