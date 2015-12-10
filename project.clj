@@ -13,9 +13,9 @@
   
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/tools.logging "0.3.1"]
-                 [com.stuartsierra/component "0.2.3"]
+                 [com.stuartsierra/component "0.3.1"]
                  [raven-clj "1.3.1"]
-                 [org.clojure/java.jdbc "0.4.1"]
+                 [org.clojure/java.jdbc "0.4.2"]
                  [org.postgresql/postgresql "9.3-1102-jdbc4"]
                  [com.mchange/c3p0 "0.9.5"]
                  [javax.servlet/servlet-api "2.5"]
@@ -30,5 +30,5 @@
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.10"]
                                   [leiningen #=(leiningen.core.main/leiningen-version)]
                                   [im.chit/vinyasa "0.3.4"]
-                                  [reloaded.repl "0.1.0"]]
+                                  [reloaded.repl "0.2.1"]]
                    :source-paths ["dev"]}})
