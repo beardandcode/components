@@ -1,4 +1,4 @@
-(defproject com.beardandcode/components "0.1.2"
+(defproject com.beardandcode/components "0.1.3"
   :description "A set of components for building software for use with com.stuartsierra/component"
   :url "http://bearandcode.com"
   :license {:name "MIT"
@@ -18,6 +18,7 @@
                  [org.clojure/java.jdbc "0.4.2"]
                  [org.postgresql/postgresql "9.3-1102-jdbc4"]
                  [com.mchange/c3p0 "0.9.5"]
+                 [yesql "0.5.1"]
                  [javax.servlet/servlet-api "2.5"]
                  [ring/ring-jetty-adapter "1.4.0"]
                  [clj-http "2.0.0"]

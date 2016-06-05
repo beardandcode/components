@@ -7,6 +7,10 @@
             [clojure.string :refer [split]]
             [clojure.tools.logging :as log]
             [clojure.java.jdbc :as jdbc]
+            [yesql.util :refer [slurp-from-classpath create-root-var]]
+            [yesql.generate :refer [generate-query-fn]]
+            [yesql.queryfile-parser :refer [parse-tagged-queries]]
+            [metrics.timers :refer [timer time!]]
             [com.beardandcode.components.healthcheck :as healthcheck]))
 
 (defn- query-params [uri]
@@ -91,3 +95,30 @@
 
 (defn new-database [url]
     (map->Database {:spec {:connection-uri (normalise-url url)}}))
+
+(defn defqueries
+    "Wrap the underlying yesql query function so that we generate something
+   that we can pass IDatabase rather than {:connection conn}. This uses the same
+   functions as defqueries/generate-var in yesql.
+
+   A generated query function will also create a timer to record the duration of
+   all executions of the query and report it using clojure-metrics."
+  [filename]
+  (let [timer-identifier (nth (re-matches #"^.*?([^/]+)\.sql$" filename) 1)]
+    (doall (->> filename
+                slurp-from-classpath
+                parse-tagged-queries
+                (map #(let [yesql-fn (generate-query-fn % {})
+                            query-timer (timer ["sql" timer-identifier (:name %)])]
+                        (create-root-var
+                         (:name %)
+                         (fn [database args]
+                            (let [conn (if (satisfies? IDatabase database)
+                                         (conn database) database)]
+                              (time! query-timer
+                                     (yesql-fn args {:connection conn})))))))))))
+
+(defmacro with-transaction [binding & body]
+  `(jdbc/db-transaction* (conn ~(second binding))
+                         (^{:once true} fn* [~(first binding)] ~@body)
+                         ~@ (rest (rest binding))))
